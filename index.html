@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,275 +7,460 @@
 <title>DealerFlow AI</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--navy:#101d38;--blue:#2378ee;--bg:#f3f6fb;--ink:#17233b;--muted:#75829a;--line:#e6ebf2;--green:#159b70;--red:#d94b58}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px Arial,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:9px;padding:11px 15px;font-weight:bold}.primary{background:var(--blue);color:white}.secondary{background:#eaf1fc;color:#24436f}.danger{background:#fff0f1;color:var(--red)}.hidden{display:none!important}
-.login{min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(135deg,#0c1730,#244b85)}.login-card{width:min(440px,100%);background:white;padding:35px;border-radius:20px;text-align:center}.login-card h1{color:var(--navy)}.login-card p{color:var(--muted)}.field{text-align:left;margin:14px 0}.field label{display:block;font-size:12px;font-weight:bold;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;padding:11px;border:1px solid #dfe6ef;border-radius:9px}.login-card button{width:100%;margin-top:9px}.notice{padding:12px;background:#fff7e7;color:#805a16;border-radius:9px;font-size:12px;margin:14px 0}
-.sidebar{position:fixed;inset:0 auto 0 0;width:235px;background:var(--navy);color:white;padding:22px 14px;display:flex;flex-direction:column}.brand{font-size:21px;font-weight:bold;padding:5px 8px 25px}.nav{display:grid;gap:6px}.nav button{background:transparent;color:#c6d2e8;text-align:left}.nav button.active,.nav button:hover{background:#20375f;color:white}.sidebottom{margin-top:auto;color:#a9b8d1;font-size:12px;overflow-wrap:anywhere}.main{margin-left:235px;min-height:100vh}.topbar{height:65px;background:white;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px}.content{padding:28px;max-width:1400px;margin:auto}.head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px}.head h1{margin:0 0 5px}.muted{color:var(--muted)}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}.stat,.panel{background:white;border:1px solid var(--line);border-radius:13px;padding:18px}.stat small{color:var(--muted)}.stat strong{display:block;font-size:27px;margin-top:10px}.panel{margin-bottom:18px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}.toolbar input{max-width:350px}.field input,.field select,.field textarea,.toolbar input{padding:10px;border:1px solid #dfe6ef;border-radius:8px}.tablewrap{overflow:auto;background:white;border:1px solid var(--line);border-radius:12px}.table{width:100%;border-collapse:collapse;min-width:650px}.table th,.table td{text-align:left;padding:13px;border-bottom:1px solid var(--line)}.table th{font-size:11px;color:var(--muted);background:#f8fafd;text-transform:uppercase}.table td{font-size:13px}.pill{display:inline-block;padding:4px 9px;border-radius:20px;background:#edf3fb;font-size:11px}.pill.green{background:#e7f8f1;color:var(--green)}.pill.red{background:#ffeded;color:var(--red)}.section{display:none}.section.active{display:block}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}.span2{grid-column:span 2}.modalback{display:none;position:fixed;inset:0;background:#0008;z-index:10;align-items:center;justify-content:center;padding:15px}.modalback.show{display:flex}.modal{background:white;border-radius:15px;padding:23px;width:min(650px,100%);max-height:90vh;overflow:auto}.modalhead{display:flex;justify-content:space-between;align-items:center}.modalhead h2{margin:0}.modalactions{display:flex;justify-content:flex-end;gap:9px;margin-top:15px}.toast{position:fixed;bottom:20px;right:20px;background:#152747;color:white;padding:13px 18px;border-radius:9px;display:none;z-index:30}.toast.show{display:block}.section p{color:var(--muted)}
-@media(max-width:800px){.sidebar{position:static;width:auto;height:auto;padding:12px}.sidebar .brand{padding:5px}.nav{display:flex;overflow:auto}.nav button{white-space:nowrap;padding:9px}.sidebottom{display:none}.main{margin:0}.topbar{padding:0 15px}.content{padding:16px}.stats{grid-template-columns:1fr 1fr}.formgrid{grid-template-columns:1fr}.span2{grid-column:auto}.head{align-items:flex-start}.head h1{font-size:22px}}
+:root{--bg:#0b1120;--panel:#121d31;--panel2:#192740;--blue:#3285ff;--cyan:#25c5d9;--text:#edf4ff;--muted:#94a8c5;--line:#263750;--green:#20c997;--red:#ff647c}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer;border:0;border-radius:9px;padding:11px 15px;background:var(--blue);color:white;font-weight:700}
+button.secondary{background:#263750}
+button.danger{background:#a93650}
+button.green{background:#148b69}
+input,select,textarea{width:100%;padding:11px;border-radius:8px;border:1px solid var(--line);background:#0d182a;color:white;margin:6px 0 13px}
+textarea{min-height:90px;resize:vertical}
+label{font-size:13px;color:#b9c9df}
+h1,h2,h3{margin-top:0}
+small,.muted{color:var(--muted)}
+.hidden{display:none!important}
+#login{max-width:440px;margin:7vh auto;padding:25px;background:var(--panel);border:1px solid var(--line);border-radius:18px}
+.brand{font-size:25px;font-weight:900;color:#58a0ff}
+.brand span{color:var(--cyan)}
+#app{display:none;min-height:100vh}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:235px;background:#0e192b;border-right:1px solid var(--line);padding:22px 14px;overflow:auto}
+.sidebar .brand{margin:5px 10px 28px}
+.nav{display:block;width:100%;text-align:left;background:transparent;color:#b8c8df;margin:4px 0;padding:12px;border-radius:8px}
+.nav:hover,.nav.active{background:#1b3150;color:white}
+.main{margin-left:235px;padding:28px;max-width:1500px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:25px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:15px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+.stat{font-size:29px;font-weight:800;margin-top:10px}
+.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 15px}
+.full{grid-column:1/-1}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:650px}
+th,td{padding:12px;text-align:left;border-bottom:1px solid var(--line);font-size:13px}
+th{color:#9eb6d4}
+.tag{padding:5px 9px;border-radius:20px;background:#263750;font-size:11px}
+.tag.green{background:#145b4c}
+.tag.yellow{background:#72541c}
+.vehicle-photo{width:90px;height:65px;object-fit:cover;border-radius:8px;margin:4px}
+.photo-grid{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.photo-grid img{width:110px;height:85px;object-fit:cover;border-radius:8px}
+.notice{background:#172d49;padding:12px;border-radius:9px;color:#c5dcfa;font-size:13px;margin:12px 0}
+.notice.warn{background:#49351c;color:#ffdda0}
+.section{display:none}
+.section.active{display:block}
+@media(max-width:760px){
+.sidebar{position:relative;width:100%;height:auto;display:flex;flex-wrap:wrap;padding:10px}
+.sidebar .brand{width:100%;margin:5px}
+.nav{width:auto;padding:9px;font-size:12px}
+.main{margin:0;padding:15px}
+.formgrid{grid-template-columns:1fr}
+.full{grid-column:auto}
+.top{align-items:flex-start;flex-direction:column}
+}
 </style>
 </head>
 <body>
 
-<div id="loginView" class="login">
- <div class="login-card">
-  <div style="font-size:28px;font-weight:bold;color:#142746">⚡ DealerFlow <span style="color:#2378ee">AI</span></div>
-  <div style="font-size:42px;margin-top:20px">🚘</div>
-  <h1>Tu centro de ventas</h1>
-  <p>Organiza vehículos, compradores, publicaciones y comisiones en un solo lugar.</p>
-  <div class="field"><label>Correo electrónico</label><input id="authEmail" type="email" placeholder="tu@correo.com"></div>
-  <div class="field"><label>Contraseña</label><input id="authPassword" type="password" placeholder="Mínimo 6 caracteres"></div>
-  <button class="primary" id="emailLogin">Iniciar sesión</button>
-  <button class="secondary" id="emailSignup">Crear cuenta</button>
-  <div class="notice" id="configNotice">Configura Supabase para crear tu usuario y sincronizar tus datos.</div>
-  <button class="secondary" id="enterDemo">Entrar en modo de prueba local</button>
- </div>
+<div id="login">
+ <div class="brand">DEALERFLOW <span>AI</span></div>
+ <p class="muted">Sistema inteligente de gestión automotriz</p>
+ <div class="notice">Conecta tu proyecto de Supabase para iniciar sesión.</div>
+ <label>Project URL</label>
+ <input id="projectUrl" placeholder="https://tu-proyecto.supabase.co">
+ <label>Publishable key / anon key</label>
+ <input id="publicKey" placeholder="sb_publishable_... o clave anon" autocomplete="off">
+ <button style="width:100%" onclick="connectSupabase()">Guardar y conectar</button>
+ <hr style="border-color:var(--line);margin:22px 0">
+ <label>Correo electrónico</label>
+ <input id="email" type="email" placeholder="tu correo">
+ <label>Contraseña</label>
+ <input id="password" type="password" placeholder="Tu contraseña">
+ <button style="width:100%;margin-top:8px" onclick="signIn()">Iniciar sesión</button>
+ <button class="secondary" style="width:100%;margin-top:9px" onclick="signUp()">Crear cuenta</button>
+ <p id="loginMsg" class="muted"></p>
 </div>
 
-<div id="appView" class="hidden">
+<div id="app">
  <aside class="sidebar">
-  <div class="brand">⚡ DealerFlow AI</div>
-  <nav class="nav" id="nav">
-   <button class="active" data-page="dashboard">▦ Dashboard</button>
-   <button data-page="inventory">🚘 Inventario</button>
-   <button data-page="leads">♙ Compradores</button>
-   <button data-page="generator">✧ Generador de anuncios</button>
-   <button data-page="posts">⚑ Publicaciones</button>
-   <button data-page="commissions">＄ Comisiones</button>
-   <button data-page="settings">⚙ Configuración</button>
-  </nav>
-  <div class="sidebottom"><p id="userName">Usuario</p><p id="connectionLabel">Modo local</p><button class="secondary" id="logoutBtn">Cerrar sesión</button></div>
+  <div class="brand">DEALERFLOW <span>AI</span></div>
+  <button class="nav active" data-page="dashboard">▦ Dashboard</button>
+  <button class="nav" data-page="inventory">🚘 Inventario</button>
+  <button class="nav" data-page="intake">📥 Recibir vehículo</button>
+  <button class="nav" data-page="leads">👥 Leads</button>
+  <button class="nav" data-page="ads">✍️ Generador de anuncios</button>
+  <button class="nav" data-page="posts">🌐 Publicaciones</button>
+  <button class="nav" data-page="commissions">💰 Comisiones</button>
+  <button class="nav" data-page="integrations">🔗 Integraciones</button>
+  <button class="nav" data-page="settings">⚙️ Configuración</button>
+  <button class="nav" onclick="signOut()">↪ Cerrar sesión</button>
  </aside>
-
  <main class="main">
-  <header class="topbar"><b id="crumb">Dashboard</b><span class="muted" id="modeBadge">Modo local</span></header>
-  <div class="content">
-
-   <section class="section active" id="page-dashboard">
-    <div class="head"><div><h1>Dashboard</h1><span class="muted">Resumen de tu operación comercial.</span></div><button class="primary" onclick="openVehicleModal()">＋ Registrar vehículo</button></div>
-    <div class="stats" id="stats"></div>
-    <div class="panel"><h3>Vehículos recientes</h3><div id="recentVehicles"></div></div>
-   </section>
-
-   <section class="section" id="page-inventory">
-    <div class="head"><div><h1>Inventario</h1><span class="muted">Administra los vehículos disponibles.</span></div><button class="primary" onclick="openVehicleModal()">＋ Agregar vehículo</button></div>
-    <div class="toolbar"><input id="vehicleSearch" placeholder="Buscar marca, modelo o VIN"><select id="vehicleFilter"><option value="">Todos los estados</option><option>Disponible</option><option>Reservado</option><option>Vendido</option><option>Inactivo</option></select></div>
-    <div class="tablewrap"><table class="table"><thead><tr><th>Vehículo</th><th>Año</th><th>Precio</th><th>Millaje</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="vehicleRows"></tbody></table></div>
-   </section>
-
-   <section class="section" id="page-leads">
-    <div class="head"><div><h1>Compradores y leads</h1><span class="muted">Registra y organiza a tus posibles compradores.</span></div><button class="primary" onclick="openLeadModal()">＋ Nuevo comprador</button></div>
-    <div class="toolbar"><input id="leadSearch" placeholder="Buscar comprador o teléfono"></div>
-    <div class="tablewrap"><table class="table"><thead><tr><th>Nombre</th><th>Teléfono</th><th>Vehículo</th><th>Origen</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="leadRows"></tbody></table></div>
-   </section>
-
-   <section class="section" id="page-generator">
-    <div class="head"><div><h1>Generador de anuncios</h1><span class="muted">Prepara textos para publicar tus vehículos.</span></div></div>
-    <div class="panel">
-     <div class="field"><label>Vehículo</label><select id="adVehicle"></select></div>
-     <div class="field"><label>Idioma</label><select id="adLanguage"><option value="es">Español</option><option value="en">English</option></select></div>
-     <button class="primary" id="generateAd">Generar anuncio</button>
-     <div id="adOutput" class="hidden">
-      <div class="field"><label>Título</label><input id="adTitle"></div>
-      <div class="field"><label>Descripción</label><textarea id="adDescription" rows="8"></textarea></div>
-      <button class="secondary" id="copyAd">Copiar texto</button>
-      <button class="primary" id="saveAd">Guardar borrador</button>
-     </div>
-    </div>
-   </section>
-
-   <section class="section" id="page-posts">
-    <div class="head"><div><h1>Publicaciones</h1><span class="muted">Borradores de anuncios guardados.</span></div></div>
-    <div class="tablewrap"><table class="table"><thead><tr><th>Vehículo</th><th>Título</th><th>Estado</th><th>Fecha</th></tr></thead><tbody id="postRows"></tbody></table></div>
-   </section>
-
-   <section class="section" id="page-commissions">
-    <div class="head"><div><h1>Comisiones</h1><span class="muted">Registra tus ventas y pagos.</span></div></div>
-    <div class="stats" id="commissionStats"></div>
-    <div class="panel">
-     <h3>Registrar venta</h3>
-     <form id="saleForm">
-      <div class="field"><label>Vehículo</label><select id="saleVehicle" required></select></div>
-      <div class="formgrid">
-       <div class="field"><label>Comisión (USD)</label><input id="saleAmount" type="number" value="500" required></div>
-       <div class="field"><label>Fecha de venta</label><input id="saleDate" type="date" required></div>
-      </div>
-      <div class="field"><label>Estado del pago</label><select id="salePaid"><option>Pendiente</option><option>Pagada</option></select></div>
-      <button class="primary">Guardar venta</button>
-     </form>
-    </div>
-    <div class="tablewrap"><table class="table"><thead><tr><th>Vehículo</th><th>Fecha</th><th>Comisión</th><th>Pago</th></tr></thead><tbody id="commissionRows"></tbody></table></div>
-   </section>
-
-   <section class="section" id="page-settings">
-    <div class="head"><div><h1>Configuración</h1><span class="muted">Conecta tu proyecto de Supabase.</span></div></div>
-    <div class="panel">
-     <h3>Conexión con Supabase</h3>
-     <p class="muted">Usa la URL del proyecto y la clave pública (sb_publishable). Nunca coloques aquí la clave secreta.</p>
-     <div class="field"><label>Project URL</label><input id="supabaseUrl" placeholder="https://xxxxx.supabase.co"></div>
-     <div class="field"><label>Publishable key / anon key</label><input id="supabaseKey" placeholder="sb_publishable_..."></div>
-     <button class="primary" id="connectSupabase">Guardar y conectar</button>
-     <p id="connectionStatus" class="muted"></p>
-    </div>
-    <div class="panel">
-     <h3>Comisión predeterminada</h3>
-     <div class="field"><label>Comisión por venta en USD</label><input id="defaultCommission" type="number" value="500"></div>
-     <button class="primary" id="saveSettings">Guardar comisión</button>
-    </div>
-   </section>
-
+  <div class="top">
+   <div><h2 id="pageTitle">Dashboard</h2><small id="userLabel"></small></div>
+   <span class="tag green">Supabase conectado</span>
   </div>
+
+  <section id="dashboard" class="section active">
+   <div class="grid">
+    <div class="card"><small>Vehículos registrados</small><div class="stat" id="statVehicles">0</div></div>
+    <div class="card"><small>Leads registrados</small><div class="stat" id="statLeads">0</div></div>
+    <div class="card"><small>Publicaciones</small><div class="stat" id="statPosts">0</div></div>
+    <div class="card"><small>Comisiones pendientes</small><div class="stat" id="statPending">$0</div></div>
+   </div>
+   <div class="card"><h3>Bienvenido a DealerFlow AI</h3>
+   <p class="muted">Gestiona tu inventario, compradores, anuncios, publicaciones y comisiones desde un solo lugar.</p></div>
+   <div class="card"><h3>Últimos vehículos</h3><div id="recentVehicles"></div></div>
+  </section>
+
+  <section id="inventory" class="section">
+   <div class="card">
+    <div class="top"><h3>Inventario de vehículos</h3><button onclick="newVehicle()">+ Agregar vehículo</button></div>
+    <input id="vehicleSearch" placeholder="Buscar marca, modelo o año..." oninput="renderVehicles()">
+    <div id="vehicleList"></div>
+   </div>
+  </section>
+
+  <section id="intake" class="section">
+   <div class="card">
+    <h3>Recepción de vehículos</h3>
+    <p class="muted">Carga aquí los datos y fotografías que recibes del equipo por WhatsApp.</p>
+    <div class="notice">Esta recepción permite subir varias fotos y registrar el vehículo. No lee automáticamente los mensajes de tu grupo de WhatsApp.</div>
+    <button onclick="newVehicle()">Abrir formulario de recepción</button>
+   </div>
+  </section>
+
+  <section id="leads" class="section">
+   <div class="card">
+    <div class="top"><h3>Compradores interesados</h3><button onclick="newLead()">+ Nuevo lead</button></div>
+    <input id="leadSearch" placeholder="Buscar comprador..." oninput="renderLeads()">
+    <div id="leadList"></div>
+   </div>
+  </section>
+
+  <section id="ads" class="section">
+   <div class="card">
+    <h3>Generador de anuncios</h3>
+    <label>Selecciona un vehículo</label><select id="adVehicle"></select>
+    <div class="actions">
+     <button onclick="generateAd('es')">Generar en español</button>
+     <button class="secondary" onclick="generateAd('en')">Generate in English</button>
+    </div>
+    <label>Título</label><input id="adTitle">
+    <label>Descripción</label><textarea id="adDescription"></textarea>
+    <div class="actions">
+     <button onclick="copyAd()">Copiar anuncio</button>
+     <button class="secondary" onclick="savePost()">Guardar en publicaciones</button>
+    </div>
+   </div>
+  </section>
+
+  <section id="posts" class="section">
+   <div class="card">
+    <h3>Publicaciones</h3>
+    <p class="muted">Controla tus anuncios y guarda los enlaces de las publicaciones.</p>
+    <div id="postList"></div>
+   </div>
+  </section>
+
+  <section id="commissions" class="section">
+   <div class="card">
+    <div class="top"><h3>Control de comisiones</h3><button onclick="newCommission()">+ Registrar comisión</button></div>
+    <div id="commissionList"></div>
+   </div>
+  </section>
+
+  <section id="integrations" class="section">
+   <div class="card">
+    <h3>WhatsApp Business</h3>
+    <span class="tag yellow">Pendiente de configuración</span>
+    <p>La integración oficial requiere una cuenta de Meta for Developers, una aplicación, WhatsApp Business Cloud API y un webhook alojado en un backend seguro.</p>
+    <p class="muted">No introduzcas tokens de acceso aquí ni compartas claves privadas en GitHub.</p>
+   </div>
+   <div class="card">
+    <h3>Facebook / Meta</h3>
+    <span class="tag yellow">Pendiente de configuración</span>
+    <p>Podremos preparar anuncios y administrar enlaces. La publicación automatizada dependerá de los permisos y productos de Meta disponibles para tu cuenta. Marketplace desde perfiles personales tiene restricciones.</p>
+   </div>
+   <div class="card">
+    <h3>Flujo de recepción</h3>
+    <p>Mientras configuramos las APIs, puedes cargar manualmente las fotos y datos recibidos en tu grupo mediante «Recibir vehículo».</p>
+   </div>
+  </section>
+
+  <section id="settings" class="section">
+   <div class="card">
+    <h3>Conexión con Supabase</h3>
+    <p class="muted">La clave pública puede estar en el navegador. Nunca uses la clave secreta o service_role.</p>
+    <label>Project URL</label><input id="settingsUrl">
+    <label>Publishable key / anon key</label><input id="settingsKey">
+    <button onclick="saveSettings()">Guardar y conectar</button>
+    <p id="settingsMsg" class="muted"></p>
+   </div>
+   <div class="card"><h3>Almacenamiento de fotografías</h3><p>Bucket configurado: <b>dealerflow-photos</b></p><p class="muted">Las imágenes se guardan en Supabase Storage.</p></div>
+  </section>
  </main>
 </div>
 
-<div class="modalback" id="vehicleModal">
- <div class="modal">
-  <div class="modalhead"><h2 id="vehicleModalTitle">Registrar vehículo</h2><button onclick="closeModal('vehicleModal')">✕</button></div>
-  <form id="vehicleForm">
-   <input type="hidden" id="vehicleId">
-   <div class="formgrid">
-    <div class="field"><label>Marca *</label><input id="vMake" required></div>
-    <div class="field"><label>Modelo *</label><input id="vModel" required></div>
-    <div class="field"><label>Año</label><input id="vYear" type="number"></div>
-    <div class="field"><label>Versión</label><input id="vTrim"></div>
-    <div class="field"><label>Precio USD</label><input id="vPrice" type="number"></div>
-    <div class="field"><label>Millaje</label><input id="vMileage" type="number"></div>
-    <div class="field"><label>VIN</label><input id="vVin"></div>
-    <div class="field"><label>Color</label><input id="vColor"></div>
-    <div class="field"><label>Transmisión</label><input id="vTransmission"></div>
-    <div class="field"><label>Combustible</label><input id="vFuel"></div>
-    <div class="field"><label>Ubicación</label><input id="vLocation"></div>
-    <div class="field"><label>Estado</label><select id="vStatus"><option>Disponible</option><option>Reservado</option><option>Vendido</option><option>Inactivo</option></select></div>
-    <div class="field span2"><label>Descripción / detalles</label><textarea id="vDescription"></textarea></div>
-   </div>
-   <div class="modalactions"><button type="button" class="secondary" onclick="closeModal('vehicleModal')">Cancelar</button><button class="primary">Guardar vehículo</button></div>
-  </form>
+<div id="vehicleModal" class="hidden" style="position:fixed;inset:0;background:#000b;overflow:auto;padding:15px;z-index:10">
+ <div class="card" style="max-width:750px;margin:20px auto">
+  <div class="top"><h3 id="vehicleModalTitle">Agregar vehículo</h3><button class="secondary" onclick="closeModal('vehicleModal')">Cerrar</button></div>
+  <input type="hidden" id="vId">
+  <div class="formgrid">
+   <div><label>Marca *</label><input id="vMake" required></div>
+   <div><label>Modelo *</label><input id="vModel" required></div>
+   <div><label>Año</label><input id="vYear" type="number"></div>
+   <div><label>Versión / Trim</label><input id="vTrim"></div>
+   <div><label>Precio ($)</label><input id="vPrice" type="number"></div>
+   <div><label>Kilometraje</label><input id="vMileage" type="number"></div>
+   <div><label>VIN</label><input id="vVin"></div>
+   <div><label>Color</label><input id="vColor"></div>
+   <div><label>Transmisión</label><select id="vTransmission"><option value="">Seleccionar</option><option>Automática</option><option>Manual</option><option>CVT</option></select></div>
+   <div><label>Combustible</label><select id="vFuel"><option value="">Seleccionar</option><option>Gasolina</option><option>Diésel</option><option>Híbrido</option><option>Eléctrico</option></select></div>
+   <div><label>Ubicación</label><input id="vLocation"></div>
+   <div><label>Estado</label><select id="vStatus"><option>Disponible</option><option>Reservado</option><option>Vendido</option></select></div>
+   <div class="full"><label>Características</label><textarea id="vFeatures"></textarea></div>
+   <div class="full"><label>Descripción</label><textarea id="vDescription"></textarea></div>
+   <div class="full"><label>Fotografías del vehículo (puedes seleccionar varias)</label><input id="vPhotos" type="file" accept="image/*" multiple onchange="previewPhotos()"><div id="photoPreview" class="photo-grid"></div></div>
+  </div>
+  <div class="actions"><button onclick="saveVehicle()">Guardar vehículo</button><button class="secondary" onclick="closeModal('vehicleModal')">Cancelar</button></div>
+  <p id="vehicleMsg" class="muted"></p>
  </div>
 </div>
 
-<div class="modalback" id="leadModal">
- <div class="modal">
-  <div class="modalhead"><h2>Nuevo comprador</h2><button onclick="closeModal('leadModal')">✕</button></div>
-  <form id="leadForm">
-   <div class="field"><label>Nombre completo *</label><input id="lName" required></div>
-   <div class="field"><label>Teléfono</label><input id="lPhone"></div>
-   <div class="field"><label>Vehículo de interés</label><select id="lVehicle"></select></div>
-   <div class="field"><label>Origen del lead</label><select id="lSource"><option>Facebook Marketplace</option><option>Instagram</option><option>WhatsApp</option><option>Otro</option></select></div>
-   <div class="field"><label>Estado</label><select id="lStatus"><option>Nuevo</option><option>Contactado</option><option>Interesado</option><option>Negociación</option><option>Vendido</option><option>Perdido</option></select></div>
-   <div class="field"><label>Notas</label><textarea id="lNotes"></textarea></div>
-   <div class="modalactions"><button type="button" class="secondary" onclick="closeModal('leadModal')">Cancelar</button><button class="primary">Guardar comprador</button></div>
-  </form>
+<div id="leadModal" class="hidden" style="position:fixed;inset:0;background:#000b;overflow:auto;padding:15px;z-index:11">
+ <div class="card" style="max-width:520px;margin:30px auto">
+  <div class="top"><h3>Nuevo comprador</h3><button class="secondary" onclick="closeModal('leadModal')">Cerrar</button></div>
+  <label>Nombre</label><input id="lName">
+  <label>Teléfono</label><input id="lPhone">
+  <label>Vehículo de interés</label><select id="lVehicle"></select>
+  <label>Origen</label><select id="lSource"><option>Facebook Marketplace</option><option>WhatsApp</option><option>Instagram</option><option>Referido</option><option>Otro</option></select>
+  <label>Estado</label><select id="lStatus"><option>Nuevo</option><option>Contactado</option><option>Interesado</option><option>Negociación</option><option>Vendido</option><option>Perdido</option></select>
+  <label>Notas</label><textarea id="lNotes"></textarea>
+  <button onclick="saveLead()">Guardar comprador</button><p id="leadMsg" class="muted"></p>
  </div>
 </div>
-<div class="toast" id="toast"></div>
+
+<div id="commissionModal" class="hidden" style="position:fixed;inset:0;background:#000b;overflow:auto;padding:15px;z-index:12">
+ <div class="card" style="max-width:520px;margin:30px auto">
+  <div class="top"><h3>Registrar comisión</h3><button class="secondary" onclick="closeModal('commissionModal')">Cerrar</button></div>
+  <label>Vehículo</label><select id="cVehicle"></select>
+  <label>Monto ($)</label><input id="cAmount" type="number" value="500">
+  <label>Fecha de venta</label><input id="cDate" type="date">
+  <label>Estado del pago</label><select id="cStatus"><option>Pendiente</option><option>Pagada</option></select>
+  <button onclick="saveCommission()">Guardar comisión</button><p id="commissionMsg" class="muted"></p>
+ </div>
+</div>
 
 <script>
-const $=id=>document.getElementById(id);
-let db=null,session=null,mode="local";
+let db=null, currentUser=null;
 let vehicles=[],leads=[],posts=[],commissions=[];
-let settings={commission:500};
-const KEYS={vehicles:"df_vehicles",leads:"df_leads",posts:"df_posts",commissions:"df_commissions",settings:"df_settings"};
-const today=()=>new Date().toISOString().slice(0,10);
-const money=n=>"$"+Number(n||0).toLocaleString("en-US",{maximumFractionDigits:2});
-const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-function toast(msg){$("toast").textContent=msg;$("toast").classList.add("show");setTimeout(()=>$("toast").classList.remove("show"),3000)}
-function saveLocal(){Object.entries(KEYS).forEach(([k,v])=>localStorage.setItem(v,JSON.stringify(({vehicles,leads,posts,commissions,settings})[k])))}
-function readLocal(){vehicles=JSON.parse(localStorage.getItem(KEYS.vehicles)||"[]");leads=JSON.parse(localStorage.getItem(KEYS.leads)||"[]");posts=JSON.parse(localStorage.getItem(KEYS.posts)||"[]");commissions=JSON.parse(localStorage.getItem(KEYS.commissions)||"[]");settings=JSON.parse(localStorage.getItem(KEYS.settings)||'{"commission":500}')}
-function vehicleName(v){return [v.year,v.make,v.model,v.trim].filter(Boolean).join(" ")}
-function pill(s){return `<span class="pill ${s==="Disponible"||s==="Pagada"?"green":s==="Vendido"||s==="Perdido"?"red":""}">${esc(s||"—")}</span>`}
-function showApp(user){$("loginView").classList.add("hidden");$("appView").classList.remove("hidden");$("userName").textContent=user?.email||"Modo local";$("connectionLabel").textContent=mode==="supabase"?"Conectado a Supabase":"Datos en este navegador";$("modeBadge").textContent=mode==="supabase"?"Nube conectada":"Modo local";loadData()}
-function showPage(page){document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));$("page-"+page).classList.add("active");document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===page));$("crumb").textContent=page.charAt(0).toUpperCase()+page.slice(1)}
-$("nav").addEventListener("click",e=>{const b=e.target.closest("button[data-page]");if(b)showPage(b.dataset.page)});
-function closeModal(id){$(id).classList.remove("show")}
-window.closeModal=closeModal;
-window.openVehicleModal=function(v=null){$("vehicleForm").reset();$("vehicleId").value=v?.id||"";$("vehicleModalTitle").textContent=v?"Editar vehículo":"Registrar vehículo";const fields={vMake:"make",vModel:"model",vYear:"year",vTrim:"trim",vPrice:"price",vMileage:"mileage",vVin:"vin",vColor:"color",vTransmission:"transmission",vFuel:"fuel",vLocation:"location",vStatus:"status",vDescription:"description"};Object.entries(fields).forEach(([id,k])=>$(id).value=v?.[k]??(k==="status"?"Disponible":""));$("vehicleModal").classList.add("show")};
-window.openLeadModal=()=>{$("leadForm").reset();$("leadModal").classList.add("show")};
-function fillSelects(){const opts='<option value="">Seleccionar vehículo</option>'+vehicles.map(v=>`<option value="${esc(v.id)}">${esc(vehicleName(v))}</option>`).join("");["adVehicle","saleVehicle","lVehicle"].forEach(id=>$(id).innerHTML=opts)}
-function render(){
- $("stats").innerHTML=[["Vehículos",vehicles.length],["Disponibles",vehicles.filter(v=>v.status==="Disponible").length],["Compradores",leads.length],["Comisiones pendientes",money(commissions.filter(c=>c.payment_status==="Pendiente").reduce((a,c)=>a+Number(c.amount||0),0))]].map(x=>`<div class="stat"><small>${x[0]}</small><strong>${x[1]}</strong></div>`).join("");
- $("recentVehicles").innerHTML=vehicles.slice(-5).reverse().map(v=>`<p><b>${esc(vehicleName(v))}</b> · ${money(v.price)} · ${pill(v.status)}</p>`).join("")||"<p class='muted'>Todavía no hay vehículos registrados.</p>";
- const q=($("vehicleSearch").value||"").toLowerCase(),f=$("vehicleFilter").value;
- const list=vehicles.filter(v=>(vehicleName(v)+" "+(v.vin||"")).toLowerCase().includes(q)&&(!f||v.status===f));
- $("vehicleRows").innerHTML=list.map(v=>`<tr><td><b>${esc(v.make)} ${esc(v.model)}</b></td><td>${esc(v.year||"—")}</td><td>${money(v.price)}</td><td>${Number(v.mileage||0).toLocaleString("en-US")}</td><td>${pill(v.status)}</td><td><button class="secondary" onclick="editVehicle('${v.id}')">Editar</button> <button class="danger" onclick="deleteVehicle('${v.id}')">Borrar</button></td></tr>`).join("")||'<tr><td colspan="6">No hay vehículos registrados.</td></tr>';
- const lq=($("leadSearch").value||"").toLowerCase();
- $("leadRows").innerHTML=leads.filter(l=>(l.name+" "+l.phone).toLowerCase().includes(lq)).map(l=>`<tr><td>${esc(l.name)}</td><td>${esc(l.phone)}</td><td>${esc(vehicleName(vehicles.find(v=>v.id===l.vehicle_id)||{}))}</td><td>${esc(l.source)}</td><td>${pill(l.status)}</td><td><button class="danger" onclick="deleteLead('${l.id}')">Borrar</button></td></tr>`).join("")||'<tr><td colspan="6">No hay compradores registrados.</td></tr>';
- $("postRows").innerHTML=posts.map(p=>`<tr><td>${esc(vehicleName(vehicles.find(v=>v.id===p.vehicle_id)||{}))}</td><td>${esc(p.title)}</td><td>${pill(p.status)}</td><td>${esc((p.created_at||"").slice(0,10))}</td></tr>`).join("")||'<tr><td colspan="4">No hay borradores.</td></tr>';
- const pending=commissions.filter(c=>c.payment_status==="Pendiente").reduce((a,c)=>a+Number(c.amount||0),0),paid=commissions.filter(c=>c.payment_status==="Pagada").reduce((a,c)=>a+Number(c.amount||0),0);
- $("commissionStats").innerHTML=`<div class="stat"><small>Pendientes</small><strong>${money(pending)}</strong></div><div class="stat"><small>Pagadas</small><strong>${money(paid)}</strong></div>`;
- $("commissionRows").innerHTML=commissions.map(c=>`<tr><td>${esc(vehicleName(vehicles.find(v=>v.id===c.vehicle_id)||{}))}</td><td>${esc(c.sale_date)}</td><td>${money(c.amount)}</td><td>${pill(c.payment_status)}</td></tr>`).join("")||'<tr><td colspan="4">No hay ventas registradas.</td></tr>';
- fillSelects();$("defaultCommission").value=settings.commission||500;
+let selectedPhotos=[],existingPhotos=[];
+const $=id=>document.getElementById(id);
+const msg=(id,t)=>$(id).textContent=t;
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function connectSupabase(){
+ const url=$('projectUrl').value.trim(),key=$('publicKey').value.trim();
+ if(!url||!key)return msg('loginMsg','Completa la URL y la clave pública.');
+ localStorage.setItem('df_supabase_url',url);
+ localStorage.setItem('df_supabase_key',key);
+ try{db=window.supabase.createClient(url,key);msg('loginMsg','Supabase conectado. Ahora inicia sesión o crea tu cuenta.');}
+ catch(e){msg('loginMsg','No se pudo conectar: '+e.message);}
+}
+function initConnection(){
+ const url=localStorage.getItem('df_supabase_url'),key=localStorage.getItem('df_supabase_key');
+ if(url&&key){$('projectUrl').value=url;$('publicKey').value=key;try{db=window.supabase.createClient(url,key);}catch(e){}}
+}
+async function signUp(){
+ if(!db)return msg('loginMsg','Primero conecta Supabase.');
+ const email=$('email').value.trim(),password=$('password').value;
+ if(!email||password.length<8)return msg('loginMsg','Escribe tu correo y una contraseña de al menos 8 caracteres.');
+ const {data,error}=await db.auth.signUp({email,password});
+ if(error)return msg('loginMsg',error.message);
+ if(data.session){await enterApp(data.session.user);}
+ else msg('loginMsg','Cuenta creada. Si la confirmación de correo está desactivada, inicia sesión. Si está activada, revisa tu email.');
+}
+async function signIn(){
+ if(!db)return msg('loginMsg','Primero conecta Supabase.');
+ const {data,error}=await db.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});
+ if(error)return msg('loginMsg',error.message);
+ await enterApp(data.user);
+}
+async function signOut(){
+ if(db)await db.auth.signOut();
+ currentUser=null;$('app').style.display='none';$('login').style.display='block';
+}
+async function enterApp(user){
+ currentUser=user;$('login').style.display='none';$('app').style.display='block';
+ $('userLabel').textContent=user.email||'Sesión activa';
+ await loadData();
 }
 async function loadData(){
- if(mode==="local"){readLocal();render();return}
- const tables=["vehicles","leads","posts","commissions"];
- for(const t of tables){const {data,error}=await db.from(t).select("*").order("created_at",{ascending:false});if(error){toast("Error leyendo "+t+": "+error.message);return}if(t==="vehicles")vehicles=data||[];if(t==="leads")leads=data||[];if(t==="posts")posts=data||[];if(t==="commissions")commissions=data||[]}
- render()
+ try{
+  const results=await Promise.all([
+   db.from('vehicles').select('*').order('created_at',{ascending:false}),
+   db.from('leads').select('*').order('created_at',{ascending:false}),
+   db.from('posts').select('*').order('created_at',{ascending:false}),
+   db.from('commissions').select('*').order('created_at',{ascending:false})
+  ]);
+  for(let i=0;i<results.length;i++){if(results[i].error)throw results[i].error;}
+  vehicles=results[0].data||[];leads=results[1].data||[];posts=results[2].data||[];commissions=results[3].data||[];
+  renderAll();
+ }catch(e){alert('Error leyendo datos: '+e.message);}
 }
-async function connect(url,key,show=true){
- try{db=window.supabase.createClient(url,key);const {error}=await db.auth.getSession();if(error)throw error;mode="supabase";$("connectionStatus").textContent="Supabase conectado. Inicia sesión o crea tu cuenta.";if(show)toast("Conexión con Supabase lista");return true}catch(e){mode="local";$("connectionStatus").textContent=e.message;toast("No se pudo conectar: "+e.message);return false}
+function renderAll(){renderVehicles();renderLeads();renderPosts();renderCommissions();renderStats();fillSelects();}
+function renderStats(){
+ $('statVehicles').textContent=vehicles.length;
+ $('statLeads').textContent=leads.length;
+ $('statPosts').textContent=posts.length;
+ $('statPending').textContent='$'+commissions.filter(x=>x.payment_status!=='Pagada').reduce((a,x)=>a+Number(x.amount||0),0).toLocaleString();
+ $('recentVehicles').innerHTML=vehicles.slice(0,5).map(v=>`<p>${esc(v.year)} ${esc(v.make)} ${esc(v.model)} — $${Number(v.price||0).toLocaleString()}</p>`).join('')||'<p class="muted">Todavía no hay vehículos.</p>';
 }
-$("emailSignup").onclick=async()=>{
- const email=$("authEmail").value.trim(),password=$("authPassword").value;
- if(!db){toast("Primero conecta Supabase en Configuración.");return}
- if(!email||password.length<6){toast("Escribe un correo y una contraseña de al menos 6 caracteres.");return}
- const {data,error}=await db.auth.signUp({email,password});
- if(error){toast(error.message);return}
- if(data.session){session=data.session;mode="supabase";showApp(data.user)}
- else{toast("Cuenta creada. Revisa tu correo y confirma la dirección antes de iniciar sesión.")}
-};
-$("emailLogin").onclick=async()=>{
- const email=$("authEmail").value.trim(),password=$("authPassword").value;
- if(!db){toast("Primero conecta Supabase en Configuración.");return}
- const {data,error}=await db.auth.signInWithPassword({email,password});
- if(error){toast(error.message);return}
- session=data.session;mode="supabase";showApp(data.user)
-};
-$("enterDemo").onclick=()=>{mode="local";showApp({email:"Modo de prueba"})};
-$("logoutBtn").onclick=async()=>{if(mode==="supabase"&&db)await db.auth.signOut();session=null;$("appView").classList.add("hidden");$("loginView").classList.remove("hidden")};
-window.editVehicle=id=>{const v=vehicles.find(x=>x.id===id);if(v)openVehicleModal(v)};
-window.deleteVehicle=async id=>{if(!confirm("¿Eliminar este vehículo?"))return;await removeRow("vehicles",id);toast("Vehículo eliminado")};
-window.deleteLead=async id=>{if(!confirm("¿Eliminar este comprador?"))return;await removeRow("leads",id);toast("Comprador eliminado")};
-async function removeRow(table,id){if(mode==="supabase"){const {error}=await db.from(table).delete().eq("id",id);if(error)throw error}else{if(table==="vehicles")vehicles=vehicles.filter(x=>x.id!==id);if(table==="leads")leads=leads.filter(x=>x.id!==id);saveLocal()}await loadData()}
-$("vehicleForm").onsubmit=async e=>{
- e.preventDefault();const id=$("vehicleId").value||crypto.randomUUID(),old=vehicles.find(v=>v.id===id);
- const row={id,make:$("vMake").value.trim(),model:$("vModel").value.trim(),year:Number($("vYear").value)||null,trim:$("vTrim").value,price:Number($("vPrice").value)||0,mileage:Number($("vMileage").value)||0,vin:$("vVin").value,color:$("vColor").value,transmission:$("vTransmission").value,fuel:$("vFuel").value,location:$("vLocation").value,status:$("vStatus").value,description:$("vDescription").value,created_at:old?.created_at||new Date().toISOString()};
- try{if(mode==="supabase"){const result=old?await db.from("vehicles").update(row).eq("id",id):await db.from("vehicles").insert(row);if(result.error)throw result.error}else{const i=vehicles.findIndex(v=>v.id===id);if(i<0)vehicles.push(row);else vehicles[i]=row;saveLocal()}closeModal("vehicleModal");await loadData();toast("Vehículo guardado")}catch(err){toast(err.message)}
-};
-$("leadForm").onsubmit=async e=>{
- e.preventDefault();const row={id:crypto.randomUUID(),name:$("lName").value,phone:$("lPhone").value,vehicle_id:$("lVehicle").value||null,source:$("lSource").value,status:$("lStatus").value,notes:$("lNotes").value,created_at:new Date().toISOString()};
- try{if(mode==="supabase"){const {error}=await db.from("leads").insert(row);if(error)throw error}else{leads.push(row);saveLocal()}closeModal("leadModal");await loadData();toast("Comprador guardado")}catch(err){toast(err.message)}
-};
-$("generateAd").onclick=()=>{
- const v=vehicles.find(x=>x.id===$("adVehicle").value);if(!v){toast("Selecciona un vehículo");return}
- const en=$("adLanguage").value==="en";
- $("adTitle").value=en?`${v.year||""} ${v.make} ${v.model} for sale`:`${v.year||""} ${v.make} ${v.model} en venta`;
- $("adDescription").value=en?`Available: ${v.year||""} ${v.make} ${v.model}.\nPrice: ${money(v.price)}.\nMileage: ${v.mileage||"Not specified"}.\n${v.description||""}\nContact us for more information.`:`¡Disponible! ${v.year||""} ${v.make} ${v.model}.\nPrecio: ${money(v.price)}.\nMillaje: ${Number(v.mileage||0).toLocaleString("es-ES")} millas.\n${v.description||""}\nEscríbenos para más información o coordinar una visita.`;
- $("adOutput").classList.remove("hidden")
-};
-$("copyAd").onclick=async()=>{try{await navigator.clipboard.writeText($("adTitle").value+"\n\n"+$("adDescription").value);toast("Anuncio copiado")}catch(e){toast("Selecciona el texto y cópialo manualmente")}};
-$("saveAd").onclick=async()=>{
- const row={id:crypto.randomUUID(),vehicle_id:$("adVehicle").value,title:$("adTitle").value,description:$("adDescription").value,status:"Borrador",created_at:new Date().toISOString()};
- try{if(mode==="supabase"){const {error}=await db.from("posts").insert(row);if(error)throw error}else{posts.push(row);saveLocal()}await loadData();toast("Borrador guardado");showPage("posts")}catch(e){toast(e.message)}
-};
-$("saleDate").value=today();
-$("saleForm").onsubmit=async e=>{
- e.preventDefault();const id=$("saleVehicle").value;if(!id){toast("Selecciona un vehículo");return}
- const row={id:crypto.randomUUID(),vehicle_id:id,amount:Number($("saleAmount").value),sale_date:$("saleDate").value,payment_status:$("salePaid").value};
- try{if(mode==="supabase"){const {error}=await db.from("commissions").insert(row);if(error)throw error;const {error:ve}=await db.from("vehicles").update({status:"Vendido"}).eq("id",id);if(ve)throw ve}else{commissions.push(row);const v=vehicles.find(x=>x.id===id);if(v)v.status="Vendido";saveLocal()}await loadData();toast("Venta registrada")}catch(e){toast(e.message)}
-};
-$("vehicleSearch").addEventListener("input",render);
-$("vehicleFilter").addEventListener("change",render);
-$("leadSearch").addEventListener("input",render);
-$("connectSupabase").onclick=async()=>{
- const url=$("supabaseUrl").value.trim(),key=$("supabaseKey").value.trim();
- if(!url||!key){toast("Completa la URL y la clave pública.");return}
- localStorage.setItem("df_supabase_url",url);localStorage.setItem("df_supabase_key",key);
- await connect(url,key,true)
-};
-$("saveSettings").onclick=()=>{settings.commission=Number($("defaultCommission").value)||500;if(mode==="local")saveLocal();$("saleAmount").value=settings.commission;toast("Comisión predeterminada guardada")};
-(async()=>{
- const url=localStorage.getItem("df_supabase_url"),key=localStorage.getItem("df_supabase_key");
- if(url&&key){const ok=await connect(url,key,false);if(ok){const {data:{session:s}}=await db.auth.getSession();if(s){session=s;mode="supabase";showApp(s.user)}else $("configNotice").textContent="Supabase está conectado. Inicia sesión o crea tu cuenta."}}
-})();
+function fillSelects(){
+ const opts=vehicles.map(v=>`<option value="${v.id}">${esc(v.year)} ${esc(v.make)} ${esc(v.model)}</option>`).join('');
+ ['adVehicle','lVehicle','cVehicle'].forEach(id=>$(id).innerHTML=opts||'<option value="">Primero registra un vehículo</option>');
+}
+function nav(page){
+ document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));
+ $(page).classList.add('active');
+ document.querySelectorAll('.nav[data-page]').forEach(x=>x.classList.toggle('active',x.dataset.page===page));
+ $('pageTitle').textContent=document.querySelector(`.nav[data-page="${page}"]`).textContent.trim();
+ if(page==='dashboard')renderStats();
+}
+document.querySelectorAll('.nav[data-page]').forEach(b=>b.addEventListener('click',()=>nav(b.dataset.page)));
+function renderVehicles(){
+ const q=($('vehicleSearch')?.value||'').toLowerCase();
+ const list=vehicles.filter(v=>(`${v.make} ${v.model} ${v.year}`).toLowerCase().includes(q));
+ $('vehicleList').innerHTML=list.map(v=>`<div class="card"><div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+ <div>${(v.photos||[]).slice(0,2).map(p=>`<img class="vehicle-photo" src="${esc(p)}">`).join('')||'🚘'}</div>
+ <div style="flex:1"><b>${esc(v.year)} ${esc(v.make)} ${esc(v.model)}</b><p class="muted">$${Number(v.price||0).toLocaleString()} · ${Number(v.mileage||0).toLocaleString()} km · ${esc(v.status)}</p></div>
+ <div class="actions"><button class="secondary" onclick="editVehicle('${v.id}')">Editar</button><button class="danger" onclick="deleteVehicle('${v.id}')">Eliminar</button></div>
+ </div></div>`).join('')||'<p class="muted">No hay vehículos registrados.</p>';
+}
+function newVehicle(){
+ $('vId').value='';['vMake','vModel','vYear','vTrim','vPrice','vMileage','vVin','vColor','vTransmission','vFuel','vLocation','vFeatures','vDescription'].forEach(id=>$(id).value='');
+ $('vStatus').value='Disponible';$('vPhotos').value='';selectedPhotos=[];existingPhotos=[];$('photoPreview').innerHTML='';
+ $('vehicleModalTitle').textContent='Agregar vehículo';$('vehicleModal').classList.remove('hidden');msg('vehicleMsg','');
+}
+function closeModal(id){$(id).classList.add('hidden');}
+function previewPhotos(){
+ selectedPhotos=[...$('vPhotos').files];$('photoPreview').innerHTML='';
+ existingPhotos.forEach(p=>{const im=document.createElement('img');im.src=p;$('photoPreview').appendChild(im);});
+ selectedPhotos.forEach(f=>{const im=document.createElement('img');im.src=URL.createObjectURL(f);$('photoPreview').appendChild(im);});
+}
+function editVehicle(id){
+ const v=vehicles.find(x=>x.id===id);if(!v)return;
+ $('vId').value=id;
+ const map={vMake:'make',vModel:'model',vYear:'year',vTrim:'trim',vPrice:'price',vMileage:'mileage',vVin:'vin',vColor:'color',vTransmission:'transmission',vFuel:'fuel',vLocation:'location',vStatus:'status',vFeatures:'features',vDescription:'description'};
+ Object.entries(map).forEach(([a,b])=>$(a).value=v[b]??'');
+ existingPhotos=v.photos||[];selectedPhotos=[];$('vPhotos').value='';previewPhotos();
+ $('vehicleModalTitle').textContent='Editar vehículo';$('vehicleModal').classList.remove('hidden');
+}
+async function uploadPhotos(){
+ const urls=[...existingPhotos];
+ for(const file of selectedPhotos){
+  const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
+  const path=`${currentUser.id}/${Date.now()}_${Math.random().toString(36).slice(2)}_${safe}`;
+  const {error}=await db.storage.from('dealerflow-photos').upload(path,file,{upsert:false,contentType:file.type});
+  if(error)throw error;
+  const {data}=db.storage.from('dealerflow-photos').getPublicUrl(path);
+  urls.push(data.publicUrl);
+ }
+ return urls;
+}
+async function saveVehicle(){
+ try{
+  const make=$('vMake').value.trim(),model=$('vModel').value.trim();
+  if(!make||!model)return msg('vehicleMsg','Marca y modelo son obligatorios.');
+  msg('vehicleMsg','Subiendo fotografías y guardando...');
+  const photos=await uploadPhotos();
+  const data={make,model,year:Number($('vYear').value)||null,trim:$('vTrim').value,price:Number($('vPrice').value)||0,mileage:Number($('vMileage').value)||0,vin:$('vVin').value,color:$('vColor').value,transmission:$('vTransmission').value,fuel:$('vFuel').value,location:$('vLocation').value,status:$('vStatus').value,features:$('vFeatures').value,description:$('vDescription').value,photos,updated_at:new Date().toISOString()};
+  const id=$('vId').value;
+  const result=id?await db.from('vehicles').update(data).eq('id',id):await db.from('vehicles').insert(data);
+  if(result.error)throw result.error;
+  closeModal('vehicleModal');await loadData();nav('inventory');
+ }catch(e){msg('vehicleMsg','Error: '+e.message);}
+}
+async function deleteVehicle(id){
+ if(!confirm('¿Eliminar este vehículo?'))return;
+ const {error}=await db.from('vehicles').delete().eq('id',id);
+ if(error)return alert(error.message);
+ await loadData();
+}
+function newLead(){
+ ['lName','lPhone','lNotes'].forEach(x=>$(x).value='');
+ $('lStatus').value='Nuevo';$('leadModal').classList.remove('hidden');msg('leadMsg','');
+}
+async function saveLead(){
+ const data={name:$('lName').value.trim(),phone:$('lPhone').value.trim(),vehicle_id:$('lVehicle').value||null,source:$('lSource').value,status:$('lStatus').value,notes:$('lNotes').value};
+ if(!data.name)return msg('leadMsg','Escribe el nombre del comprador.');
+ const {error}=await db.from('leads').insert(data);
+ if(error)return msg('leadMsg',error.message);
+ closeModal('leadModal');await loadData();
+}
+function renderLeads(){
+ if(!$('leadList'))return;
+ const q=($('leadSearch')?.value||'').toLowerCase();
+ const rows=leads.filter(l=>(`${l.name} ${l.phone}`).toLowerCase().includes(q));
+ $('leadList').innerHTML=`<div class="tablewrap"><table><tr><th>Nombre</th><th>Teléfono</th><th>Origen</th><th>Estado</th><th>Notas</th></tr>${rows.map(l=>`<tr><td>${esc(l.name)}</td><td>${esc(l.phone)}</td><td>${esc(l.source)}</td><td>${esc(l.status)}</td><td>${esc(l.notes)}</td></tr>`).join('')}</table></div>`;
+}
+function generateAd(lang){
+ const v=vehicles.find(x=>x.id===$('adVehicle').value);if(!v)return alert('Registra o selecciona un vehículo.');
+ if(lang==='es'){
+ $('adTitle').value=`${v.year||''} ${v.make} ${v.model} ${v.trim||''}`.trim();
+ $('adDescription').value=`🚘 ${v.year||''} ${v.make} ${v.model}\n\nPrecio: $${Number(v.price||0).toLocaleString()}\nKilometraje: ${Number(v.mileage||0).toLocaleString()} km\nColor: ${v.color||'Consultar'}\nTransmisión: ${v.transmission||'Consultar'}\nCombustible: ${v.fuel||'Consultar'}\nUbicación: ${v.location||'Consultar'}\n\n${v.features||''}\n${v.description||''}\n\n¡Contáctanos para más información o para coordinar una visita!`;
+ }else{
+ $('adTitle').value=`${v.year||''} ${v.make} ${v.model} ${v.trim||''}`.trim();
+ $('adDescription').value=`🚘 ${v.year||''} ${v.make} ${v.model}\n\nPrice: $${Number(v.price||0).toLocaleString()}\nMileage: ${Number(v.mileage||0).toLocaleString()} miles/km\nColor: ${v.color||'Ask for details'}\nTransmission: ${v.transmission||'Ask for details'}\nFuel: ${v.fuel||'Ask for details'}\nLocation: ${v.location||'Ask for details'}\n\n${v.features||''}\n${v.description||''}\n\nContact us for more information or to schedule a visit!`;
+ }
+}
+function copyAd(){
+ const text=$('adTitle').value+'\n\n'+$('adDescription').value;
+ navigator.clipboard.writeText(text).then(()=>alert('Anuncio copiado.'));
+}
+async function savePost(){
+ const vehicle_id=$('adVehicle').value,title=$('adTitle').value,description=$('adDescription').value;
+ if(!vehicle_id||!title)return alert('Genera primero un anuncio.');
+ const {error}=await db.from('posts').insert({vehicle_id,title,description,status:'Pendiente',url:null});
+ if(error)return alert(error.message);
+ alert('Anuncio guardado en Publicaciones.');await loadData();nav('posts');
+}
+function renderPosts(){
+ $('postList').innerHTML=posts.map(p=>`<div class="card"><b>${esc(p.title)}</b><p class="muted">${esc(p.description)}</p><label>Estado</label><select id="ps_${p.id}"><option ${p.status==='Pendiente'?'selected':''}>Pendiente</option><option ${p.status==='Publicado'?'selected':''}>Publicado</option><option ${p.status==='Archivado'?'selected':''}>Archivado</option></select><label>Enlace de Facebook</label><input id="pu_${p.id}" value="${esc(p.url||'')}" placeholder="Pega aquí el enlace del anuncio"><button onclick="updatePost('${p.id}')">Guardar cambios</button></div>`).join('')||'<p class="muted">Todavía no hay publicaciones.</p>';
+}
+async function updatePost(id){
+ const {error}=await db.from('posts').update({status:$('ps_'+id).value,url:$('pu_'+id).value||null}).eq('id',id);
+ if(error)return alert(error.message);await loadData();alert('Publicación actualizada.');
+}
+function newCommission(){
+ fillSelects();$('cAmount').value='500';$('cDate').value=new Date().toISOString().slice(0,10);$('cStatus').value='Pendiente';$('commissionModal').classList.remove('hidden');msg('commissionMsg','');
+}
+async function saveCommission(){
+ const data={vehicle_id:$('cVehicle').value||null,amount:Number($('cAmount').value)||0,sale_date:$('cDate').value||null,payment_status:$('cStatus').value};
+ const {error}=await db.from('commissions').insert(data);
+ if(error)return msg('commissionMsg',error.message);
+ closeModal('commissionModal');await loadData();
+}
+function renderCommissions(){
+ $('commissionList').innerHTML=`<div class="tablewrap"><table><tr><th>Vehículo</th><th>Monto</th><th>Fecha</th><th>Estado</th></tr>${commissions.map(c=>{const v=vehicles.find(x=>x.id===c.vehicle_id);return `<tr><td>${v?esc(v.make+' '+v.model):'Sin vehículo'}</td><td>$${Number(c.amount||0).toLocaleString()}</td><td>${esc(c.sale_date||'')}</td><td><span class="tag ${c.payment_status==='Pagada'?'green':'yellow'}">${esc(c.payment_status)}</span></td></tr>`}).join('')}</table></div>`;
+}
+function saveSettings(){
+ const url=$('settingsUrl').value.trim(),key=$('settingsKey').value.trim();
+ if(!url||!key)return msg('settingsMsg','Completa ambos campos.');
+ localStorage.setItem('df_supabase_url',url);localStorage.setItem('df_supabase_key',key);
+ db=window.supabase.createClient(url,key);msg('settingsMsg','Configuración guardada. Supabase conectado.');
+}
+function openSettings(){
+ $('settingsUrl').value=localStorage.getItem('df_supabase_url')||'';
+ $('settingsKey').value=localStorage.getItem('df_supabase_key')||'';
+}
+$('settings').addEventListener('click',()=>openSettings());
+initConnection();
+if(db){
+ db.auth.getSession().then(({data})=>{if(data.session)enterApp(data.session.user);});
+}
 </script>
 </body>
 </html>
