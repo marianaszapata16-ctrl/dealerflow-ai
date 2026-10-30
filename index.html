@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -40,55 +39,24 @@
    <button data-page="commissions"><span class="ico">＄</span>Comisiones</button>
    <button data-page="settings"><span class="ico">⚙</span>Configuración</button>
   </nav>
-  <div class="sidebar-bottom"><div class="userline"><div class="avatar" id="userAvatar">D</div><span id="userLabel">Modo local</span></div><button class="btn ghost small" id="logoutBtn">Cerrar sesión</button></div>
+  <div class="sidebar-bottom"><div class="userline"><span class="avatar" id="userAvatar">DF</span><span id="userName">Modo local</span></div><div id="connectionLabel">Almacenamiento local del navegador</div><button class="btn small ghost" style="margin-top:12px;color:#d4e1f5;border-color:#ffffff25" id="logoutBtn">Cerrar sesión / salir</button></div>
  </aside>
  <main class="main">
-  <header class="topbar"><button class="btn ghost mobile-menu" id="menuBtn">☰</button><div class="crumb">DealerFlow AI / <b id="crumbPage">Dashboard</b></div><div class="top-actions"><span class="status" id="modeStatus">Modo local</span><span id="todayLabel"></span></div></header>
+  <header class="topbar"><div class="split"><button class="btn ghost small mobile-menu" id="menuToggle">☰</button><span class="crumb">DealerFlow AI / <b id="crumb">Dashboard</b></span></div><div class="top-actions"><span class="status" id="modeBadge">Modo local</span><span id="today" class="muted"></span></div></header>
   <div class="content">
    <section class="section active" id="page-dashboard">
-    <div class="page-head"><div><div class="eyebrow">Resumen general</div><h1>Dashboard</h1><p class="sub">Tu operación comercial, de un vistazo.</p></div></div>
-    <div class="stats" id="dashboardStats"></div>
-    <div class="grid2"><div class="panel"><h3>Actividad reciente</h3><p class="hint">Últimos vehículos y movimientos registrados.</p><div id="recentActivity"></div></div><div class="panel"><h3>Comisiones</h3><p class="hint">Seguimiento de ingresos por ventas.</p><div id="dashboardCommissions"></div></div></div>
+    <div class="page-head"><div><div class="eyebrow">Resumen general</div><h1>Dashboard</h1><p class="sub">Controla el inventario y el movimiento de tus ventas.</p></div><button class="btn primary" onclick="openVehicleModal()">＋ Registrar vehículo</button></div>
+    <div class="stats" id="stats"></div>
+    <div class="grid2"><div class="panel"><h3>Vehículos recientes</h3><p class="hint">Últimos vehículos registrados</p><div id="recentVehicles"></div></div><div class="panel"><h3>Actividad comercial</h3><p class="hint">Resumen de compradores y comisiones</p><div id="activity"></div></div></div>
    </section>
    <section class="section" id="page-inventory">
     <div class="page-head"><div><div class="eyebrow">Gestión de unidades</div><h1>Inventario</h1><p class="sub">Registra y administra los vehículos del dealer.</p></div><button class="btn primary" onclick="openVehicleModal()">＋ Agregar vehículo</button></div>
-    <div class="toolbar"><input class="search" id="vehicleSearch" placeholder="Buscar marca, modelo, año o VIN..." style="max-width:360px"><select id="vehicleFilter" class="search" style="max-width:190px"><option value="">Todos los estados</option><option>Disponible</option><option>Pendiente de revisión</option><option>Reservado</option><option>Vendido</option></select></div>
+    <div class="toolbar"><input class="search" id="vehicleSearch" placeholder="Buscar marca, modelo, año o VIN..." style="max-width:360px"><select id="vehicleFilter" class="search" style="max-width:190px"><option value="">Todos los estados</option><option>Disponible</option><option>Reservado</option><option>Vendido</option><option>Inactivo</option><option>Pendiente de revisión</option></select></div>
     <div class="table-wrap"><table class="table"><thead><tr><th>Vehículo</th><th>Año / versión</th><th>Precio</th><th>Millaje</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="vehicleRows"></tbody></table></div>
    </section>
    <section class="section" id="page-intake">
-    <div class="page-head"><div><div class="eyebrow">Entrada de inventario</div><h1>Recepción de vehículos</h1><p class="sub">Pega la información recibida por WhatsApp y adjunta fotografías.</p></div></div>
-    <div class="panel"><form id="intakeForm"><div class="form-grid"><div class="field"><label>Marca</label><input id="intakeMake" required></div><div class="field"><label>Modelo</label><input id="intakeModel" required></div><div class="field"><label>Año</label><input id="intakeYear" type="number"></div><div class="field"><label>Precio</label><input id="intakePrice" type="number"></div><div class="field span2"><label>Información recibida por WhatsApp</label><textarea id="rawInfo" placeholder="Pega aquí los detalles del vehículo..."></textarea></div><div class="field span2"><label>Fotografías (máximo 8)</label><input id="intakePhotos" type="file" accept="image/*" multiple></div></div><button class="btn primary">Guardar recepción</button></form></div>
+    <div class="page-head"><div><div class="eyebrow">Entrada de inventario</div><h1>Recepción de vehículos</h1><p class="sub">Pega los datos recibidos por WhatsApp y adjunta las fotos.</p></div></div>
+    <div class="panel" style="max-width:850px"><form id="intakeForm"><div class="field"><label>Información recibida por WhatsApp</label><textarea id="rawInfo" placeholder="Pega aquí el mensaje del grupo: año, marca, modelo, precio, millaje, VIN, ubicación..."></textarea><div class="help">El texto se conserva para revisión. No extraemos datos automáticamente en esta versión.</div></div><div class="field"><label>Fotografías del vehículo</label><input type="file" id="intakePhotos" accept="image/*" multiple></div><div class="form-grid"><div class="field"><label>Marca *</label><input id="intakeMake" required></div><div class="field"><label>Modelo *</label><input id="intakeModel" required></div><div class="field"><label>Año</label><input id="intakeYear" type="number" min="1900" max="2100"></div><div class="field"><label>Precio (USD)</label><input id="intakePrice" type="number" min="0" step="0.01"></div></div><button class="btn primary">Guardar como pendiente de revisión</button></form></div>
    </section>
    <section class="section" id="page-generator">
-    <div class="page-head"><div><div class="eyebrow">Marketing automotriz</div><h1>Generador de anuncios</h1><p class="sub">Crea borradores listos para revisar y publicar.</p></div></div>
-    <div class="panel"><div class="form-grid"><div class="field"><label>Vehículo</label><select id="adVehicle"></select></div><div class="field"><label>Idioma</label><select id="adLanguage"><option value="es">Español</option><option value="en">English</option></select></div></div><button class="btn primary" id="generateAd">Generar anuncio</button><div id="adOutput" class="hidden" style="margin-top:20px"><div class="field"><label>Título</label><input id="adTitle"></div><div class="field"><label>Descripción</label><textarea id="adDescription"></textarea></div><button class="btn secondary" id="copyAd" onclick="copyText('adDescription')">Copiar descripción</button> <button class="btn primary" id="saveAd">Guardar borrador</button></div></div>
-   </section>
-   <section class="section" id="page-leads">
-    <div class="page-head"><div><div class="eyebrow">Seguimiento comercial</div><h1>Compradores y leads</h1><p class="sub">Organiza interesados y oportunidades.</p></div><button class="btn primary" onclick="openLeadModal()">＋ Agregar comprador</button></div>
-    <div class="toolbar"><input class="search" id="leadSearch" placeholder="Buscar comprador o teléfono..." style="max-width:360px"></div>
-    <div class="table-wrap"><table class="table"><thead><tr><th>Comprador</th><th>Teléfono</th><th>Vehículo</th><th>Estado</th><th>Fecha</th><th></th></tr></thead><tbody id="leadRows"></tbody></table></div>
-   </section>
-   <section class="section" id="page-posts">
-    <div class="page-head"><div><div class="eyebrow">Contenido comercial</div><h1>Publicaciones</h1><p class="sub">Borradores y enlaces de anuncios publicados.</p></div></div>
-    <div class="table-wrap"><table class="table"><thead><tr><th>Vehículo</th><th>Título</th><th>Estado</th><th>Fecha</th><th>Enlace</th></tr></thead><tbody id="postRows"></tbody></table></div>
-   </section>
-   <section class="section" id="page-commissions">
-    <div class="page-head"><div><div class="eyebrow">Ingresos</div><h1>Comisiones</h1><p class="sub">Controla comisiones pendientes y pagadas.</p></div></div>
-    <div class="stats" id="commissionStats"></div>
-    <div class="panel"><form id="saleForm"><div class="form-grid"><div class="field"><label>Vehículo vendido</label><select id="saleVehicle" required></select></div><div class="field"><label>Comisión ($)</label><input id="saleAmount" type="number" min="0" value="500" required></div><div class="field"><label>Fecha de venta</label><input id="saleDate" type="date" required></div><div class="field"><label>Estado de pago</label><select id="salePaid"><option>Pendiente</option><option>Pagada</option></select></div></div><button class="btn primary">Registrar venta</button></form></div>
-    <div class="table-wrap" style="margin-top:18px"><table class="table"><thead><tr><th>Vehículo</th><th>Fecha</th><th>Comisión</th><th>Pago</th></tr></thead><tbody id="commissionRows"></tbody></table></div>
-   </section>
-   <section class="section" id="page-settings">
-    <div class="page-head"><div><div class="eyebrow">Preferencias</div><h1>Configuración</h1><p class="sub">Conecta tu proyecto para habilitar sincronización y acceso con correo.</p></div></div>
-    <div class="settings-grid">
-     <div class="panel"><h3>Conexión Supabase</h3><p class="hint">Conecta tu proyecto para habilitar sincronización y acceso con correo.</p><div class="field"><label>Project URL</label><input id="supabaseUrl" placeholder="https://xxxxx.supabase.co"></div><div class="field"><label>Publishable / anon key</label><input id="supabaseKey" placeholder="sb_publishable_..."></div><button class="btn primary" id="connectSupabase">Conectar</button><p class="help">La clave publicable está diseñada para frontend, pero protege tus tablas con RLS. Nunca pegues aquí una service_role key.</p></div>
-     <div class="panel"><h3>Preferencias de comisiones</h3><p class="hint">Define el monto habitual por venta.</p><div class="field"><label>Comisión predeterminada ($)</label><input id="defaultCommission" type="number" value="500"></div><button class="btn secondary" id="saveSettings">Guardar preferencia</button><button class="btn danger small" id="clearLocal" style="margin-top:12px">Borrar datos locales</button></div>
-    </div>
-   </section>
-  </div>
- </main>
-</div>
-<div class="modal-back" id="vehicleModal"><div class="modal"><div class="modal-head"><h2 id="vehicleModalTitle">Registrar vehículo</h2><button class="close" onclick="closeModal('vehicleModal')">×</button></div><form id="vehicleForm"><input id="vehicleId" type="hidden"><div class="form-grid"><div class="field"><label>Marca</label><input id="vMake" required></div><div class="field"><label>Modelo</label><input id="vModel" required></div><div class="field"><label>Año</label><input id="vYear" type="number"></div><div class="field"><label>Versión</label><input id="vTrim"></div><div class="field"><label>Precio ($)</label><input id="vPrice" type="number"></div><div class="field"><label>Millaje</label><input id="vMileage" type="number"></div><div class="field"><label>VIN</label><input id="vVin"></div><div class="field"><label>Color</label><input id="vColor"></div><div class="field"><label>Transmisión</label><input id="vTransmission"></div><div class="field"><label>Combustible</label><input id="vFuel"></div><div class="field"><label>Ubicación</label><input id="vLocation"></div><div class="field"><label>Estado</label><select id="vStatus"><option>Disponible</option><option>Pendiente de revisión</option><option>Reservado</option><option>Vendido</option></select></div><div class="field span2"><label>Descripción</label><textarea id="vDescription"></textarea></div><div class="field span2"><label>Fotografías (máximo 8)</label><input id="vPhotos" type="file" accept="image/*" multiple></div></div><div class="modal-actions"><button type="button" class="btn ghost" onclick="closeModal('vehicleModal')">Cancelar</button><button class="btn primary">Guardar vehículo</button></div></form></div></div>
-<div class="modal-back" id="leadModal"><div class="modal"><div class="modal-head"><h2>Registrar comprador</h2><button class="close" onclick="closeModal('leadModal')">×</button></div><form id="leadForm"><div class="form-grid"><div class="field"><label>Nombre</label><input id="lName" required></div><div class="field"><label>Teléfono</label><input id="lPhone"></div><div class="field"><label>Vehículo de interés</label><select id="lVehicle"></select></div><div class="field"><label>Origen</label><select id="lSource"><option>Facebook Marketplace</option><option>WhatsApp</option><option>Instagram</option><option>Otro</option></select></div><div class="field"><label>Estado</label><select id="lStatus"><option>Nuevo</option><option>Contactado</option><option>Negociando</option><option>Vendido</option><option>Perdido</option></select></div><div class="field span2"><label>Notas</label><textarea id="lNotes"></textarea></div></div><div class="modal-actions"><button type="button" class="btn ghost" onclick="closeModal('leadModal')">Cancelar</button><button class="btn primary">Guardar comprador</button></div></form></div></div>
-<div class="toast" id="toast"></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <div class="page-head"><div><div class="eyebrow">Contenido comercial</div><h1>Generador de anuncios</h1><p class="sub">Crea borradores a partir de la información registrada.</p></div></div>
