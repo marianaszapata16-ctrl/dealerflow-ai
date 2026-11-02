@@ -941,14 +941,26 @@ const detectedPrice = priceMatch
 
     const detectedPrice = price ? (price[1] || price[2]) : '';
 
-    const fields = [
-      ['Marca', make],
-      ['Modelo', model],
-      ['Año', year ? year[1] : ''],
-      ['Precio', detectedPrice ? '$' + detectedPrice : ''],
-      ['Kilometraje', mileage ? mileage[1] : '']
-    ];
+const colorMatch = normalized.match(
+  /\b(negro|negra|blanco|blanca|gris|plateado|plateada|plata|rojo|roja|azul|verde|beige|marrón|brown|black|white|silver|gray|grey|red|blue)\b/i
+);
 
+const transmissionMatch = normalized.match(
+  /\b(automática|automatico|automático|automatica|manual|automatic|transmission)\b/i
+);
+
+const color = colorMatch ? colorMatch[1] : '';
+const transmission = transmissionMatch ? transmissionMatch[1] : '';
+
+const fields = [
+  ['Marca', make],
+  ['Modelo', model],
+  ['Año', year ? year[1] : ''],
+  ['Precio', detectedPrice ? '$' + detectedPrice : ''],
+  ['Kilometraje', mileage ? mileage[1] : ''],
+  ['Color', color],
+  ['Transmisión', transmission]
+];
     preview.innerHTML = '';
 
     fields.forEach(([label, value]) => {
@@ -969,6 +981,8 @@ const detectedPrice = priceMatch
         detectedPrice.replace(/,/g, '');
       if (mileage) $('dfReceptionMileage').value =
         mileage[1].replace(/,/g, '');
+     if (color) $('dfReceptionColor').value = color;
+if (transmission) $('dfReceptionTransmission').value = transmission;
 
       $('dfReceptionDescription').value = text;
 
