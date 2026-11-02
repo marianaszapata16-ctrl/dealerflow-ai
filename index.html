@@ -986,6 +986,14 @@ if (transmission) $('dfReceptionTransmission').value = transmission;
 
       $('dfReceptionDescription').value = text;
 
+     $('dfReceptionFeatures').value = [
+  'Sunroof', 'cuero', 'AWD', '4WD',
+  'cámara de reversa', 'asientos eléctricos',
+  'Bluetooth', 'GPS', 'navegación'
+].filter(feature =>
+  text.toLowerCase().includes(feature.toLowerCase())
+).join(', ');
+
       const transferFiles = $('dfReceptionPhotos');
       const dataTransfer = new DataTransfer();
 
