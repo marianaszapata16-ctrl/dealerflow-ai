@@ -676,6 +676,135 @@ $('settings').addEventListener('click',()=>openSettings());
 
 })();
 
+
+// ==========================================
+// DEALERFLOW AI - EXTRACCION INTELIGENTE V2
+// ==========================================
+
+(function(){
+
+  const description = document.getElementById('dfReceptionDescription');
+
+  if (!description) return;
+
+  // Evitar duplicar el botón si se carga nuevamente
+  if (document.getElementById('dfExtractData')) return;
+
+  description.insertAdjacentHTML('afterend', `
+    <button type="button" id="dfExtractData"
+      style="background:#1769ff;color:white;border:0;
+      border-radius:8px;padding:12px 16px;
+      cursor:pointer;font-weight:bold;margin:5px 0 15px;">
+      ✨ Extraer datos automáticamente
+    </button>
+  `);
+
+  document.getElementById('dfExtractData').onclick = function(){
+
+    const text = description.value.trim();
+
+    if (!text) {
+      alert('Primero pega la descripción recibida por WhatsApp.');
+      return;
+    }
+
+    const brands = [
+      'Mercedes-Benz','Mercedes','Toyota','Ford','Chevrolet',
+      'Honda','Nissan','Hyundai','Kia','BMW','Audi',
+      'Volkswagen','Jeep','Lexus','Mazda','Subaru',
+      'Mitsubishi','Tesla','Volvo','Porsche','RAM',
+      'Dodge','GMC','Cadillac','Acura'
+    ];
+
+    const normalized = text.replace(/\s+/g,' ').trim();
+    const lower = normalized.toLowerCase();
+
+    let make = '';
+    let model = '';
+
+    // Identificar marca
+    for (const brand of brands) {
+      const position = lower.indexOf(brand.toLowerCase());
+
+      if (position !== -1) {
+        make = brand;
+
+        let remaining = normalized.substring(
+          position + brand.length
+        );
+
+        // Extraer modelo hasta encontrar el año
+        remaining = remaining
+          .split(/\b20\d{2}\b|\b19\d{2}\b/)[0]
+          .split(/\$|precio|millas|kilometraje|km\b/i)[0]
+          .replace(/^[\s\-:,]+|[\s\-:,]+$/g,'');
+
+        model = remaining;
+        break;
+      }
+    }
+
+    // Identificar año
+    const yearMatch = normalized.match(/\b(19\d{2}|20[0-3]\d)\b/);
+
+   // Identificar precio sin confundirlo con año o kilometraje
+const priceMatch = normalized.match(
+  /(?:precio|price)\s*[:\-]?\s*\$?\s*([\d,]+)|\$\s*([\d,]+)/i
+);
+
+const detectedPrice = priceMatch
+  ? (priceMatch[1] || priceMatch[2])
+  : '';
+
+    // Identificar kilometraje
+    const mileageMatch = normalized.match(
+      /(\d{1,3}(?:,\d{3})+|\d{1,6})\s*(?:millas|mi\b|kilómetros|kilometros|km\b)/i
+    );
+
+    let found = [];
+
+    if (make) {
+      document.getElementById('dfReceptionMake').value = make;
+      found.push('Marca: ' + make);
+    }
+
+    if (model) {
+      document.getElementById('dfReceptionModel').value = model;
+      found.push('Modelo: ' + model);
+    }
+
+    if (yearMatch) {
+      document.getElementById('dfReceptionYear').value = yearMatch[1];
+      found.push('Año: ' + yearMatch[1]);
+    }
+
+   if (detectedPrice) {
+  document.getElementById('dfReceptionPrice').value =
+    detectedPrice.replace(/,/g,'');
+  found.push('Precio: $' + detectedPrice);
+}
+
+    if (mileageMatch) {
+      document.getElementById('dfReceptionMileage').value =
+        mileageMatch[1].replace(/,/g,'');
+      found.push('Kilometraje: ' + mileageMatch[1]);
+    }
+
+    const status = document.getElementById('dfReceptionStatus');
+
+    if (found.length) {
+      status.textContent =
+        '✨ Datos identificados. Revisa los campos antes de guardar: ' +
+        found.join(' | ');
+    } else {
+      status.textContent =
+        'No pudimos identificar datos automáticamente. Puedes completarlos manualmente.';
+    }
+
+  };
+
+})();
+
  initConnection();
 if(db){
  db.auth.getSession().then(({data})=>{if(data.session)enterApp(data.session.user);});
