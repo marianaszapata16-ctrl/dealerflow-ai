@@ -89,6 +89,7 @@ th{color:#9eb6d4}
   <button class="nav active" data-page="dashboard">▦ Dashboard</button>
   <button class="nav" data-page="inventory">🚘 Inventario</button>
   <button class="nav" data-page="intake">📥 Recibir vehículo</button>
+  <button class="nav" data-page="reception">🤖 Centro de Recepción</button>
   <button class="nav" data-page="leads">👥 Leads</button>
   <button class="nav" data-page="ads">✍️ Generador de anuncios</button>
   <button class="nav" data-page="posts">🌐 Publicaciones</button>
@@ -131,6 +132,35 @@ th{color:#9eb6d4}
     <button onclick="newVehicle()">Abrir formulario de recepción</button>
    </div>
   </section>
+
+  <section id="reception" class="section">
+  <div class="card">
+    <h3>🤖 Centro de Recepción</h3>
+    <p class="muted">Tu asistente para recibir y organizar vehículos.</p>
+
+    <label>Fotografías del vehículo</label>
+    <input id="centerPhotos" type="file" accept="image/*" multiple>
+
+    <div id="centerPhotoCount" class="muted">
+      Ninguna fotografía seleccionada.
+    </div>
+
+    <label>Mensaje recibido por WhatsApp</label>
+    <textarea id="centerMessage" rows="7"
+      placeholder="Pega aquí el mensaje recibido..."></textarea>
+
+    <div class="actions">
+      <button type="button" id="centerAnalyze">✨ Analizar vehículo</button>
+      <button type="button" class="secondary" id="centerClear">Limpiar</button>
+    </div>
+
+    <div id="centerStatus" class="notice">
+      Esperando fotografías y descripción.
+    </div>
+
+    <div id="centerPreview"></div>
+  </div>
+</section>
 
   <section id="leads" class="section">
    <div class="card">
@@ -828,6 +858,146 @@ const detectedPrice = priceMatch
 
   };
 
+})();
+
+ // ==========================================
+// DEALERFLOW AI - CENTRO DE RECEPCION V1
+// ==========================================
+
+(function () {
+  const $ = id => document.getElementById(id);
+
+  const photos = $('centerPhotos');
+  const message = $('centerMessage');
+  const analyze = $('centerAnalyze');
+  const clear = $('centerClear');
+  const status = $('centerStatus');
+  const preview = $('centerPreview');
+
+  if (!photos || !message || !analyze || !clear) return;
+
+  photos.onchange = () => {
+    const count = photos.files.length;
+    $('centerPhotoCount').textContent =
+      count ? count + ' fotografías seleccionadas.' :
+      'Ninguna fotografía seleccionada.';
+  };
+
+  analyze.onclick = () => {
+    const text = message.value.trim();
+    const files = Array.from(photos.files);
+
+    if (!text) {
+      status.textContent = 'Primero pega el mensaje de WhatsApp.';
+      return;
+    }
+
+    if (!files.length) {
+      status.textContent = 'Selecciona al menos una fotografía.';
+      return;
+    }
+
+    const brands = [
+      'Mercedes-Benz', 'Mercedes', 'Toyota', 'Ford',
+      'Chevrolet', 'Honda', 'Nissan', 'Hyundai', 'Kia',
+      'BMW', 'Audi', 'Volkswagen', 'Jeep', 'Lexus',
+      'Mazda', 'Subaru', 'Mitsubishi', 'Tesla', 'Volvo',
+      'Porsche', 'RAM', 'Dodge', 'GMC', 'Cadillac', 'Acura'
+    ];
+
+    const normalized = text.replace(/\s+/g, ' ').trim();
+    const lower = normalized.toLowerCase();
+
+    let make = '';
+    let model = '';
+
+    for (const brand of brands) {
+      const position = lower.indexOf(brand.toLowerCase());
+
+      if (position !== -1) {
+        make = brand;
+
+        let remaining = normalized.substring(position + brand.length);
+
+        remaining = remaining
+          .split(/\b20\d{2}\b|\b19\d{2}\b/)[0]
+          .split(/\$|precio|millas|kilometraje|km\b/i)[0]
+          .replace(/^[\s\-:,]+|[\s\-:,]+$/g, '');
+
+        model = remaining;
+        break;
+      }
+    }
+
+    const year = normalized.match(/\b(19\d{2}|20[0-3]\d)\b/);
+
+    const price = normalized.match(
+      /(?:precio|price)\s*[:\-]?\s*\$?\s*([\d,]+)|\$\s*([\d,]+)/i
+    );
+
+    const mileage = normalized.match(
+      /(\d{1,3}(?:,\d{3})+|\d{1,6})\s*(?:millas|mi\b|kilómetros|kilometros|km\b)/i
+    );
+
+    const detectedPrice = price ? (price[1] || price[2]) : '';
+
+    const fields = [
+      ['Marca', make],
+      ['Modelo', model],
+      ['Año', year ? year[1] : ''],
+      ['Precio', detectedPrice ? '$' + detectedPrice : ''],
+      ['Kilometraje', mileage ? mileage[1] : '']
+    ];
+
+    preview.innerHTML = '';
+
+    fields.forEach(([label, value]) => {
+      const line = document.createElement('p');
+      line.textContent = label + ': ' + (value || 'No identificado');
+      preview.appendChild(line);
+    });
+
+    const transfer = document.createElement('button');
+    transfer.type = 'button';
+    transfer.textContent = 'Continuar en recepción de vehículos';
+
+    transfer.onclick = () => {
+      if (make) $('dfReceptionMake').value = make;
+      if (model) $('dfReceptionModel').value = model;
+      if (year) $('dfReceptionYear').value = year[1];
+      if (detectedPrice) $('dfReceptionPrice').value =
+        detectedPrice.replace(/,/g, '');
+      if (mileage) $('dfReceptionMileage').value =
+        mileage[1].replace(/,/g, '');
+
+      $('dfReceptionDescription').value = text;
+
+      const transferFiles = $('dfReceptionPhotos');
+      const dataTransfer = new DataTransfer();
+
+      files.forEach(file => dataTransfer.items.add(file));
+      transferFiles.files = dataTransfer.files;
+
+      $('dfReceptionPhotoCount').textContent =
+        files.length + ' fotografías seleccionadas.';
+
+      $('dfReceptionBtn').click();
+      status.textContent = 'Datos y fotografías enviados a recepción. Revisa antes de guardar.';
+    };
+
+    preview.appendChild(transfer);
+
+    status.textContent =
+      'Análisis de texto completado. Revisa los datos antes de continuar.';
+  };
+
+  clear.onclick = () => {
+    photos.value = '';
+    message.value = '';
+    preview.innerHTML = '';
+    $('centerPhotoCount').textContent = 'Ninguna fotografía seleccionada.';
+    status.textContent = 'Recepción limpia. Esperando nuevos datos.';
+  };
 })();
 
  initConnection();
