@@ -528,6 +528,22 @@ $('settings').addEventListener('click',()=>openSettings());
         <label>Kilometraje</label>
         <input id="dfReceptionMileage" type="number" placeholder="18890">
 
+        <label>Color</label>
+<input id="dfReceptionColor" placeholder="Ej. Blanco">
+
+<label>Transmisión</label>
+<select id="dfReceptionTransmission">
+  <option value="">Seleccionar transmisión</option>
+  <option value="Automática">Automática</option>
+  <option value="Manual">Manual</option>
+  <option value="CVT">CVT</option>
+  <option value="Otra">Otra</option>
+</select>
+
+<label>Características</label>
+<textarea id="dfReceptionFeatures" rows="3"
+  placeholder="Ej. Sunroof, cuero, cámara, sensores, AWD..."></textarea>
+
         <label>Descripción recibida por WhatsApp</label>
         <textarea id="dfReceptionDescription" rows="5"
           placeholder="Pega aquí el mensaje original del grupo..."></textarea>
@@ -574,6 +590,9 @@ $('settings').addEventListener('click',()=>openSettings());
     const price = el('dfReceptionPrice').value;
     const mileage = el('dfReceptionMileage').value;
     const description = el('dfReceptionDescription').value.trim();
+    const color = el('dfReceptionColor').value.trim();
+    const transmission = el('dfReceptionTransmission').value;
+    const features = el('dfReceptionFeatures').value.trim();
     const photos = Array.from(el('dfReceptionPhotos').files);
 
     if (!make || !model || !description) {
@@ -636,16 +655,19 @@ $('settings').addEventListener('click',()=>openSettings());
 
       status.textContent = 'Guardando vehículo...';
 
-      const vehicle = {
-        make: make,
-        model: model,
-        year: year ? Number(year) : null,
-        price: price ? Number(price) : null,
-        mileage: mileage ? Number(mileage) : null,
-        description: description,
-        photos: photoUrls,
-        status: 'Disponible'
-      };
+     const vehicle = {
+  make: make,
+  model: model,
+  year: year ? Number(year) : null,
+  price: price ? Number(price) : null,
+  mileage: mileage ? Number(mileage) : null,
+  color: color,
+  transmission: transmission,
+  features: features,
+  description: description,
+  photos: photoUrls,
+  status: 'Disponible'
+};
 
       const {error: insertError} = await db
         .from('vehicles')
@@ -661,6 +683,9 @@ $('settings').addEventListener('click',()=>openSettings());
       el('dfReceptionYear').value = '';
       el('dfReceptionPrice').value = '';
       el('dfReceptionMileage').value = '';
+     el('dfReceptionColor').value = '';
+     el('dfReceptionTransmission').value = '';
+     el('dfReceptionFeatures').value = '';
       el('dfReceptionDescription').value = '';
       el('dfReceptionPhotos').value = '';
       el('dfReceptionPhotoCount').textContent =
