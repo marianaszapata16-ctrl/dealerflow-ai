@@ -457,7 +457,226 @@ function openSettings(){
  $('settingsKey').value=localStorage.getItem('df_supabase_key')||'';
 }
 $('settings').addEventListener('click',()=>openSettings());
-initConnection();
+
+// ==========================================
+// DEALERFLOW AI - RECEPCION INTELIGENTE V1
+// ==========================================
+
+(function(){
+
+  const style = document.createElement('style');
+  style.textContent = `
+    #dfReceptionBtn {
+      position:fixed;bottom:24px;right:24px;z-index:9998;
+      background:#1769ff;color:white;border:0;border-radius:12px;
+      padding:15px 20px;font-weight:bold;cursor:pointer;
+      box-shadow:0 5px 20px #0003;
+    }
+    #dfReceptionModal {
+      display:none;position:fixed;inset:0;z-index:9999;
+      background:#0009;overflow:auto;padding:20px;
+    }
+    #dfReceptionPanel {
+      background:white;color:#172033;max-width:650px;
+      margin:35px auto;padding:25px;border-radius:16px;
+      font-family:Arial,sans-serif;
+    }
+    #dfReceptionPanel input,#dfReceptionPanel textarea {
+      width:100%;box-sizing:border-box;padding:12px;
+      border:1px solid #ccd3df;border-radius:8px;
+      margin:6px 0 14px;font-size:14px;
+    }
+    #dfReceptionPanel label {font-weight:bold;font-size:13px}
+    #dfReceptionPanel button {
+      border:0;border-radius:8px;padding:12px 16px;
+      cursor:pointer;font-weight:bold;margin:5px 4px 5px 0;
+    }
+    #dfReceptionSave {background:#1769ff;color:white}
+    #dfReceptionClose {background:#e8edf5;color:#172033}
+    #dfReceptionStatus {font-size:13px;margin-top:12px}
+  `;
+  document.head.appendChild(style);
+
+  document.body.insertAdjacentHTML('beforeend', `
+    <button id="dfReceptionBtn">＋ Recepción inteligente</button>
+
+    <div id="dfReceptionModal">
+      <div id="dfReceptionPanel">
+        <h2>🚗 Recepción inteligente</h2>
+        <p>Registra un vehículo recibido desde WhatsApp.</p>
+
+        <label>Fotografías del vehículo</label>
+        <input id="dfReceptionPhotos" type="file"
+          accept="image/*" multiple>
+
+        <div id="dfReceptionPhotoCount">
+          Ninguna fotografía seleccionada.
+        </div>
+
+        <label>Marca</label>
+        <input id="dfReceptionMake" placeholder="Ej. Toyota">
+
+        <label>Modelo</label>
+        <input id="dfReceptionModel" placeholder="Ej. Corolla Cross">
+
+        <label>Año</label>
+        <input id="dfReceptionYear" type="number" placeholder="2025">
+
+        <label>Precio en dólares</label>
+        <input id="dfReceptionPrice" type="number" placeholder="35000">
+
+        <label>Kilometraje</label>
+        <input id="dfReceptionMileage" type="number" placeholder="18890">
+
+        <label>Descripción recibida por WhatsApp</label>
+        <textarea id="dfReceptionDescription" rows="5"
+          placeholder="Pega aquí el mensaje original del grupo..."></textarea>
+
+        <div id="dfReceptionStatus"></div>
+
+        <button id="dfReceptionSave">Guardar vehículo</button>
+        <button id="dfReceptionClose">Cerrar</button>
+      </div>
+    </div>
+  `);
+
+  const el = id => document.getElementById(id);
+
+  el('dfReceptionBtn').onclick = () => {
+    el('dfReceptionModal').style.display = 'block';
+  };
+
+  el('dfReceptionClose').onclick = () => {
+    el('dfReceptionModal').style.display = 'none';
+  };
+
+  el('dfReceptionPhotos').onchange = () => {
+    const count = el('dfReceptionPhotos').files.length;
+    el('dfReceptionPhotoCount').textContent =
+      count ? count + ' fotografías seleccionadas.' :
+      'Ninguna fotografía seleccionada.';
+  };
+
+  el('dfReceptionSave').onclick = async () => {
+
+    const status = el('dfReceptionStatus');
+    const saveButton = el('dfReceptionSave');
+
+    if (!db) {
+      status.textContent =
+        'Error: primero conecta DealerFlow con Supabase.';
+      return;
+    }
+
+    const make = el('dfReceptionMake').value.trim();
+    const model = el('dfReceptionModel').value.trim();
+    const year = el('dfReceptionYear').value;
+    const price = el('dfReceptionPrice').value;
+    const mileage = el('dfReceptionMileage').value;
+    const description = el('dfReceptionDescription').value.trim();
+    const photos = Array.from(el('dfReceptionPhotos').files);
+
+    if (!make || !model || !description) {
+      status.textContent =
+        'Completa la marca, modelo y descripción.';
+      return;
+    }
+
+    if (!photos.length) {
+      status.textContent =
+        'Selecciona al menos una fotografía.';
+      return;
+    }
+
+    if (photos.some(file => !file.type.startsWith('image/'))) {
+      status.textContent =
+        'Solo puedes cargar archivos de imagen.';
+      return;
+    }
+
+    if (photos.some(file => file.size > 10 * 1024 * 1024)) {
+      status.textContent =
+        'Cada fotografía debe pesar menos de 10 MB.';
+      return;
+    }
+
+    saveButton.disabled = true;
+    status.textContent = 'Subiendo fotografías...';
+
+    try {
+
+      const {data: sessionData, error: sessionError} =
+        await db.auth.getSession();
+
+      if (sessionError || !sessionData.session) {
+        throw new Error('Tu sesión ha caducado. Inicia sesión nuevamente.');
+      }
+
+      const photoUrls = [];
+
+      for (let i = 0; i < photos.length; i++) {
+
+        const file = photos[i];
+        const extension = file.name.split('.').pop().toLowerCase();
+        const path = sessionData.session.user.id + '/' +
+          Date.now() + '_' + i + '.' + extension;
+
+        const {error: uploadError} = await db.storage
+          .from('dealerflow-photos')
+          .upload(path, file);
+
+        if (uploadError) throw uploadError;
+
+        const {data: publicData} = db.storage
+          .from('dealerflow-photos')
+          .getPublicUrl(path);
+
+        photoUrls.push(publicData.publicUrl);
+      }
+
+      status.textContent = 'Guardando vehículo...';
+
+      const vehicle = {
+        make: make,
+        model: model,
+        year: year ? Number(year) : null,
+        price: price ? Number(price) : null,
+        mileage: mileage ? Number(mileage) : null,
+        description: description,
+        photos: photoUrls,
+        status: 'Disponible'
+      };
+
+      const {error: insertError} = await db
+        .from('vehicles')
+        .insert([vehicle]);
+
+      if (insertError) throw insertError;
+
+      status.textContent =
+        '¡Vehículo registrado correctamente! Fotos guardadas en la nube.';
+
+      el('dfReceptionMake').value = '';
+      el('dfReceptionModel').value = '';
+      el('dfReceptionYear').value = '';
+      el('dfReceptionPrice').value = '';
+      el('dfReceptionMileage').value = '';
+      el('dfReceptionDescription').value = '';
+      el('dfReceptionPhotos').value = '';
+      el('dfReceptionPhotoCount').textContent =
+        'Ninguna fotografía seleccionada.';
+
+    } catch (error) {
+      console.error('DealerFlow Reception:', error);
+      status.textContent = 'Error: ' + error.message;
+    }
+
+    saveButton.disabled = false;
+  };
+
+})();
+
+ initConnection();
 if(db){
  db.auth.getSession().then(({data})=>{if(data.session)enterApp(data.session.user);});
 }
